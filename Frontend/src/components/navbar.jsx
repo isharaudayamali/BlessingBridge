@@ -6,6 +6,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const settingsMenuRef = useRef(null);
   const isHome = location.pathname === '/' || location.pathname === '/home';
   const isDashboard = location.pathname === '/dashboard';
@@ -53,21 +54,23 @@ const Navbar = () => {
 
   useEffect(() => {
     setIsSettingsMenuOpen(false);
+    setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
   return (
-    <nav className="fixed top-0 z-50 flex h-20 w-full max-w-full items-center justify-between bg-[#f9f9f7]/80 px-8 font-['Noto_Serif'] tracking-tight text-[#1a1c1b] shadow-[0_12px_40px_rgba(115,92,0,0.04)] backdrop-blur-md antialiased dark:bg-[#1a1c1b]/80 dark:text-[#f9f9f7]">
-      <div className="flex items-center gap-8">
+    <nav className="fixed top-0 z-50 w-full max-w-full bg-[#f9f9f7]/80 font-['Noto_Serif'] tracking-tight text-[#1a1c1b] shadow-[0_12px_40px_rgba(115,92,0,0.04)] backdrop-blur-md antialiased dark:bg-[#1a1c1b]/80 dark:text-[#f9f9f7]">
+      <div className="flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="flex min-w-0 items-center gap-4 lg:gap-8">
         <button
           type="button"
-          className="flex items-center gap-3 text-2xl font-bold italic text-[#735c00] dark:text-[#d4af37]"
+          className="flex min-w-0 items-center gap-2 sm:gap-3 text-xl font-bold italic text-[#735c00] dark:text-[#d4af37] sm:text-2xl"
           onClick={() => navigate('/')}
         >
-          <img src={logo} alt="BlessingBridge Logo" className="h-9 w-9 rounded-full object-cover" />
-          <span>BlessingBridge</span>
+          <img src={logo} alt="BlessingBridge Logo" className="h-8 w-8 rounded-full object-cover sm:h-9 sm:w-9" />
+          <span className="truncate">BlessingBridge</span>
         </button>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-8 lg:flex">
           <button
             type="button"
             className={`pb-1 font-semibold transition-all duration-300 ${isHome ? 'border-b-2 border-[#d4af37] text-[#735c00] dark:text-[#d4af37]' : 'text-[#1a1c1b]/60 hover:text-[#735c00] dark:text-[#f9f9f7]/60'}`}
@@ -99,8 +102,8 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-6">
-        <div ref={settingsMenuRef} className="relative hidden md:block">
+      <div className="flex items-center gap-2 sm:gap-3 lg:gap-6">
+        <div ref={settingsMenuRef} className="relative hidden lg:block">
           <button
             type="button"
             className="flex items-center gap-2 text-[#1a1c1b]/60 transition-all duration-300 hover:text-[#735c00]"
@@ -150,14 +153,23 @@ const Navbar = () => {
 
         <button
           type="button"
-          className="rounded-lg px-6 py-2.5 font-medium text-white shadow-sm duration-150 active:scale-95"
+          className="hidden rounded-lg px-6 py-2.5 font-medium text-white shadow-sm duration-150 active:scale-95 sm:inline-flex"
           style={{ background: 'linear-gradient(45deg, #735c00 0%, #d4af37 100%)' }}
           onClick={() => navigate('/add-member')}
         >
           Add Member
         </button>
 
-        <div className="h-10 w-10 overflow-hidden rounded-full border border-[#d0c5af]/20">
+        <button
+          type="button"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-[#735c00] transition-colors hover:bg-[#f1ece0] lg:hidden"
+          onClick={() => navigate('/add-member')}
+          aria-label="Add Member"
+        >
+          <span className="material-symbols-outlined">person_add</span>
+        </button>
+
+        <div className="hidden h-10 w-10 overflow-hidden rounded-full border border-[#d0c5af]/20 sm:block">
           <button
             type="button"
             className="h-full w-full rounded-full transition-transform duration-300 hover:scale-110"
@@ -170,7 +182,60 @@ const Navbar = () => {
             />
           </button>
         </div>
+
+        <button
+          type="button"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-[#735c00] transition-colors hover:bg-[#f1ece0] lg:hidden"
+          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+          aria-expanded={isMobileMenuOpen}
+          aria-label="Toggle menu"
+        >
+          <span className="material-symbols-outlined">{isMobileMenuOpen ? 'close' : 'menu'}</span>
+        </button>
       </div>
+      </div>
+
+      {isMobileMenuOpen ? (
+        <div className="border-t border-[#d0c5af]/30 bg-[#f9f9f7]/95 px-4 py-4 sm:px-6 lg:hidden">
+          <div className="flex flex-col gap-2">
+            <button
+              type="button"
+              className={`rounded-lg px-3 py-2 text-left font-semibold transition-colors ${isHome ? 'bg-[#f1ece0] text-[#735c00]' : 'text-[#1a1c1b]/70 hover:bg-[#f1ece0] hover:text-[#735c00]'}`}
+              onClick={() => navigate('/')}
+            >
+              Home
+            </button>
+            <button
+              type="button"
+              className={`rounded-lg px-3 py-2 text-left font-semibold transition-colors ${isDashboard ? 'bg-[#f1ece0] text-[#735c00]' : 'text-[#1a1c1b]/70 hover:bg-[#f1ece0] hover:text-[#735c00]'}`}
+              onClick={() => navigate('/dashboard')}
+            >
+              Dashboard
+            </button>
+            <button
+              type="button"
+              className={`rounded-lg px-3 py-2 text-left font-semibold transition-colors ${isCelebrations ? 'bg-[#f1ece0] text-[#735c00]' : 'text-[#1a1c1b]/70 hover:bg-[#f1ece0] hover:text-[#735c00]'}`}
+              onClick={() => navigate('/celebrations')}
+            >
+              Celebrations
+            </button>
+            <button
+              type="button"
+              className={`rounded-lg px-3 py-2 text-left font-semibold transition-colors ${isMembers ? 'bg-[#f1ece0] text-[#735c00]' : 'text-[#1a1c1b]/70 hover:bg-[#f1ece0] hover:text-[#735c00]'}`}
+              onClick={() => navigate('/members')}
+            >
+              Members
+            </button>
+            <button
+              type="button"
+              className={`rounded-lg px-3 py-2 text-left font-semibold transition-colors ${isLogin ? 'bg-[#f1ece0] text-[#735c00]' : 'text-[#1a1c1b]/70 hover:bg-[#f1ece0] hover:text-[#735c00]'}`}
+              onClick={() => navigate('/login')}
+            >
+              Login
+            </button>
+          </div>
+        </div>
+      ) : null}
     </nav>
   );
 };
