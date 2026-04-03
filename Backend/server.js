@@ -11,8 +11,20 @@ connectDB();
 
 const app = express();
 
+// CORS Configuration
+const corsOptions = {
+  origin: [
+    'https://blessingg-bridge.vercel.app',
+    'http://localhost:3000', // for local development
+    process.env.FRONTEND_URL // allow via environment variable
+  ].filter(Boolean),
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json()); // Body parser for JSON
 
 // Routes
